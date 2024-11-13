@@ -1,0 +1,5 @@
+CREATE USER airflow WITH LOGIN PASSWORD 'airflow';
+CREATE USER discovery WITH LOGIN PASSWORD 'discovery';
+
+CREATE DATABASE airflow WITH OWNER airflow;
+CREATE DATABASE discovery WITH OWNER discovery;
