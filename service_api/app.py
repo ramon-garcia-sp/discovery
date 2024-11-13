@@ -122,7 +122,7 @@ def trigger_dag():
         if response.status_code == 200:
             return jsonify({"status": "Airflow DAG triggered successfully"}), 200
         return jsonify({"error": response.text}), response.status_code
-    except Exception as e:
+    except (requests.HTTPError, Exception) as e:
         app.logger.error(e)
         print(e, app.config.get("AIRFLOW_API_TOKEN"))
         return jsonify({"error": str(e)}), 500

@@ -5,6 +5,7 @@ import os
 import sys
 
 from kafka import KafkaConsumer
+from kafka.errors import KafkaError
 from sqlalchemy.exc import SQLAlchemyError
 
 # editing the path here so the consumer can run from the base of the project
@@ -64,7 +65,7 @@ def process_message(session, message):
         message = json.loads(message)
         logging.info(f"Processing message: {message}")
         consolidate_data(session, message)
-    except Exception as e:
+    except (json.JSONDecodeError, Exception) as e:
         logging.error(f"Error processing message: {e}")
 
 
@@ -85,7 +86,7 @@ def run_consumer():
         for message in consumer:
             process_message(session, message.value.decode("utf-8"))
             consumer.commit()
-    except Exception as e:
+    except (KafkaError, Exception) as e:
         logging.error(f"Error in consumer: {e}")
     finally:
         consumer.close()

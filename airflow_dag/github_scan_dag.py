@@ -86,7 +86,7 @@ def process_repository(
                 print(f"Sent config for {repo_name} to Kafka")
             else:
                 print(f"Invalid manifest in {repo_name}: Missing required fields")
-        except Exception as e:
+        except (json.JSONDecodeError, ValueError, Exception) as e:
             print(f"Error processing {repo_name}: {e}")
     else:
         print(f"manifest not found in {repo_name}")

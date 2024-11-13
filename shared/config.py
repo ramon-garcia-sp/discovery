@@ -8,17 +8,17 @@ class Config:
 
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "DATABASE_URL",
-        "postgresql://discovery:discovery@192.168.0.1:5432/discovery?sslmode=disable",
+        "postgresql://discovery:discovery@127.0.0.1:5432/discovery?sslmode=disable",
     )
     AIRFLOW_TRIGGER_URL = os.getenv(
-        "AIRFLOW_TRIGGER_URL", "http://192.168.0.1:8080/api/v1/dags/github_personal_config_collector/dagRuns"
+        "AIRFLOW_TRIGGER_URL", "http://127.0.0.1:8080/api/v1/dags/github_scan_dag/dagRuns"
     )
     AIRFLOW_CREDENTIALS = os.getenv("AIRFLOW_CREDENTIALS", "discovery:discovery")
     AIRFLOW_API_TOKEN = os.getenv("AIRFLOW_API_TOKEN", None)
     FLASK_HOST = os.getenv("FLASK_HOST", "0.0.0.0")
     FLASK_PORT = int(os.getenv("FLASK_PORT", 5000))
     FLASK_DEBUG = os.getenv("FLASK_DEBUG", "true").lower() in ("true", "1", "yes")
-    KAFKA_BROKER = os.getenv("KAFKA_BROKER", "192.168.0.1:9092")
+    KAFKA_BROKER = os.getenv("KAFKA_BROKER", "127.0.0.1:9092")
     KAFKA_CONSUMER_GROUP = os.getenv("KAFKA_CONSUMER_GROUP", "github-scanner-consumer")
     KAFKA_TOPIC = os.getenv("KAFKA_TOPIC", "github-scanner-events")
 
