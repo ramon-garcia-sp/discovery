@@ -44,7 +44,8 @@ def get_services():
     services = query.all()
     try:
         response = deserialized(services, keys=SERVICE_KEYS)
-    except:
+    except Exception as serialization_error:
+        app.logger.error(serialization_error)
         return jsonify({"error": "Failed to extract data for the service correctly"}), 500
     return jsonify(response)
 
@@ -88,7 +89,8 @@ def query_services():
     services = query.all()
     try:
         response = deserialized(services, keys=SERVICE_KEYS)
-    except:
+    except Exception as serialization_error:
+        app.logger.error(serialization_error)
         return jsonify({"error": "Failed to extract data for the service correctly"}), 500
     return jsonify(response)
 
@@ -99,7 +101,8 @@ def list_conflicts():
     services = query.filter(Service.consolidation_conflict == True).all()
     try:
         response = deserialized(services, keys=SERVICE_KEYS)
-    except:
+    except Exception as serialization_error:
+        app.logger.error(serialization_error)
         return jsonify({"error": "Failed to extract data for the service correctly"}), 500
     return jsonify(response)
 
