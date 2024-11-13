@@ -63,7 +63,7 @@ pytest ./tests -v -s
 ```
 
 
-## How to stup my infra using Docker?
+## How to setup my infra using Docker?
 
 Docker compose seems to be the way to go, it is ugly hackish, but it runs after all. To make it work:
 
