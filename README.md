@@ -63,9 +63,11 @@ pytest ./tests -v -s
 
 
 ## How to test using docker?
-Docker compose seems the way to go, it is ugly to make it run but it runs after all. To make it work:
+Docker compose seems the way to go, it is ugly hackish, but it runs after all. To make it work:
 
-1. In infra (`cd infra`), run `mkdir_base.sh`
-2. Copy your dag to the `Aifrlow/dags` directory
+1. In infra (`cd infra`), run `./mkdir_base.sh`
+2. Copy your dag to the `Airflow/dags` directory
 3. Run: `docker-compose up -d`
+
+This will setup all the infra you need, however, you need still to configure your consumer and service to get them to collaborate with the infra you just provisioned. Update your db settings and your API keys both for github and airflow if you plan on using airflow keys.
 
