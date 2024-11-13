@@ -71,5 +71,5 @@ Docker compose seems to be the way to go, it is ugly hackish, but it runs after 
 2. Copy your dag to the `Airflow/dags` directory
 3. Run: `docker-compose up -d`
 
-This will setup all the infra you need, however, you need still to configure your consumer and service to get them to collaborate with the infra you just provisioned. Update your db settings and your API keys both for github and airflow if you plan on using airflow keys.
+This will setup all the infra you need, however, you still need to configure your consumer and service to get them to collaborate with the infra you just provisioned. Update your db settings and your API keys both for github and airflow if you plan on using airflow keys.
 
