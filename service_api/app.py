@@ -1,12 +1,13 @@
 import base64
 
 import requests
+from enum import Enum
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 
 from shared.config import get_config
 from shared.models import Service
-from shared.utils import deserealize_service
+from shared.utils import deserialized
 
 config = get_config()
 
@@ -16,31 +17,48 @@ app.config.from_object(config)
 db = SQLAlchemy(app)
 db.Model = Service
 
+class LifeCycleStatus(Enum):
+    NEW = "new"
+    DEVELOPMENT = "development"
+    RELEASED = "released"
+    MAINTENANCE = "maintenance"
+    SUNSET = "sunset"
+    DEPRECATED = "deprecated"
+    ARCHIVED = "archived"
+
+SERVICE_KEYS = [
+     "id",
+     "service_name",
+     "owner_team",
+     "repository_source",
+     "lifecycle_status",
+     "consolidation_conflict",
+     "last_updated",
+]
 
 @app.route("/services", methods=["GET"])
 def get_services():
     session = db.session
     query = session.query(Service)
-    query = query.filter(Service.consolidation_confict == False)  # do not return conflicts
+    query = query.filter(Service.consolidation_conflict == False)  # do not return conflicts
     services = query.all()
-    return jsonify(deserealize_service(services))
+    try:
+        response = deserialized(services, keys=SERVICE_KEYS)
+    except:
+        return jsonify({"error": "Failed to extract data for the service correctly"}), 500
+    return jsonify(response)
 
 
 @app.route("/services/<int:service_id>/lifecycle", methods=["PUT"])
 def update_lifecycle(service_id):
     lifecycle_options = {
-        "new",
-        "development",
-        "released",
-        "maintenance",
-        "sunset",
-        "deprecated",
-        "archived",
+
     }
     data = request.json
     new_lifecycle = data.get("lifecycle_status")
-
-    if new_lifecycle not in lifecycle_options:
+    try:
+        lifecycle = str(LifeCycleStatus[new_lifecycle.upper()])
+    except KeyError:
         return jsonify({"error": "Invalid lifecycle status"}), 400
 
     session = db.session
@@ -48,7 +66,7 @@ def update_lifecycle(service_id):
     if not service:
         return jsonify({"error": "Service not found"}), 404
 
-    service.lifecycle_status = new_lifecycle
+    service.lifecycle_status = lifecycle
     db.session.commit()
     return jsonify({"message": "Lifecycle updated successfully"}), 200
 
@@ -66,30 +84,38 @@ def query_services():
     if "status" in args:
         query = query.filter(Service.lifecycle_status == args["status"])
 
-    query = query.filter(Service.consolidation_confict == False)  # do not return conflicts
+    query = query.filter(Service.consolidation_conflict == False)  # do not return conflicts
     services = query.all()
-    return jsonify(deserealize_service(services))
-
+    try:
+        response = deserialized(services, keys=SERVICE_KEYS)
+    except:
+        return jsonify({"error": "Failed to extract data for the service correctly"}), 500
+    return jsonify(response)
 
 @app.route("/services/conflicts", methods=["GET"])
 def list_conflicts():
     session = db.session
     query = session.query(Service)
-    services = query.filter(Service.consolidation_confict == True).all()
-    return jsonify(deserealize_service(services))
+    services = query.filter(Service.consolidation_conflict == True).all()
+    try:
+        response = deserialized(services, keys=SERVICE_KEYS)
+    except:
+        return jsonify({"error": "Failed to extract data for the service correctly"}), 500
+    return jsonify(response)
+
 
 
 @app.route("/services/<int:service_id>/resolve_conflict", methods=["PUT"])
 def resolve_conflict(service_id):
     session = db.session
     query = session.query(Service).filter(Service.id == service_id)
-    query = query.filter(Service.consolidation_confict == True)
+    query = query.filter(Service.consolidation_conflict == True)
     service = query.first()
     if not service:
         return jsonify({"error": "Service not found"}), 404
 
-    if service.consolidation_confict:
-        service.consolidation_confict = False
+    if service.consolidation_conflict:
+        service.consolidation_conflict = False
         db.session.commit()
         return jsonify({"message": "Conflict resolved successfully"}), 200
     return jsonify({"message": "No conflict to resolve"}), 200

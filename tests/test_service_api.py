@@ -78,7 +78,7 @@ def test_list_conflicts(client):
     assert response.status_code == 200
     data = response.get_json()
     assert len(data) >= 1
-    assert all(d.get('consolidation_confict') is True for d in data)
+    assert all(d.get('consolidation_conflict') is True for d in data)
 
 
 def test_resolve_conflict(client):

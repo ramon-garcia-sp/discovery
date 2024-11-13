@@ -16,7 +16,7 @@ class Service(Base):
     owner_team: str = Column(String(255), nullable=False)
     repository_source: str = Column(Text, nullable=False)
     lifecycle_status: str = Column(String(50), nullable=False)
-    consolidation_confict: bool = Column(Boolean, default=False)
+    consolidation_conflict: bool = Column(Boolean, default=False)
     last_updated: str = Column(
         TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.now()
     )

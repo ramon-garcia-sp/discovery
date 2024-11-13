@@ -28,7 +28,7 @@ def upgrade() -> None:
         sa.Column("owner_team", sa.String(length=255), nullable=False),
         sa.Column("repository_source", sa.Text(), nullable=False),
         sa.Column("lifecycle_status", sa.String(length=50), nullable=False),
-        sa.Column("consolidation_confict", sa.Boolean(), nullable=True),
+        sa.Column("consolidation_conflict", sa.Boolean(), nullable=True),
         sa.Column(
             "last_updated",
             sa.TIMESTAMP(),

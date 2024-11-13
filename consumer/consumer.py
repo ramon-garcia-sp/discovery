@@ -41,7 +41,7 @@ def consolidate_data(session, new_data):
             if new_data["lifecycle_status"].lower() == "deprecated":
                 existing_service.lifecycle_status = "deprecated"
 
-            existing_service.last_updated = datetime.datetime.utcnow()
+            existing_service.last_updated = datetime.datetime.now(datetime.UTC)
 
         else:
             new_service = Service(
@@ -49,8 +49,8 @@ def consolidate_data(session, new_data):
                 owner_team=new_data["owner_team"],
                 repository_source=new_data["repository_source"],
                 lifecycle_status=new_data["lifecycle_status"],
-                consolidation_confict=in_conflict,
-                last_updated=datetime.datetime.utcnow(),
+                consolidation_conflict=in_conflict,
+                last_updated=datetime.datetime.now(datetime.UTC),
             )
             session.add(new_service)
 

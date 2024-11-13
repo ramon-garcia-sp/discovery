@@ -35,7 +35,7 @@ def client():
                 owner_team="Team A",
                 repository_source="https://github.com/test/repoA",
                 lifecycle_status="development",
-                consolidation_confict=False,
+                consolidation_conflict=False,
             )
             db.session.add(test_service_1)
 
@@ -44,7 +44,7 @@ def client():
                 owner_team="Team B",
                 repository_source="https://github.com/test/repoB",
                 lifecycle_status="development",
-                consolidation_confict=True,
+                consolidation_conflict=True,
             )
             db.session.add(test_service_2)
 
@@ -53,7 +53,7 @@ def client():
                 owner_team="Team C",
                 repository_source="https://github.com/test/repoC",
                 lifecycle_status="maintenance",
-                consolidation_confict=True,
+                consolidation_conflict=True,
             )
             db.session.add(test_service_3)
             db.session.commit()
